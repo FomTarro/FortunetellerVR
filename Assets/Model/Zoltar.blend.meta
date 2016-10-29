@@ -1,0 +1,218 @@
+fileFormatVersion: 2
+guid: 64c39a58469d453448f421e492a4ecca
+timeCreated: 1477706092
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bone_001
+    100004: Cube
+    100006: Cube_002
+    100008: Cube_033
+    100010: Cube_034
+    100012: Cube_035
+    100014: Cube_037
+    100016: Cube_038
+    100018: Cube_039
+    100020: Cube_040
+    100022: Cube_041
+    100024: Cube_042
+    100026: Cube_043
+    100028: Cube_044
+    100030: Cube_045
+    100032: Cube_046
+    100034: Cube_047
+    100036: Cube_048
+    100038: Cube_049
+    100040: Cylinder_000
+    100042: Cylinder_001
+    100044: Cylinder_002
+    100046: Cylinder_006
+    100048: Cylinder_012
+    100050: Icosphere
+    100052: Icosphere_001
+    100054: Icosphere_002
+    100056: Rootbone
+    100058: Sphere
+    100060: SpinBone
+    100062: //RootNode
+    400000: Armature
+    400002: Bone_001
+    400004: Cube
+    400006: Cube_002
+    400008: Cube_033
+    400010: Cube_034
+    400012: Cube_035
+    400014: Cube_037
+    400016: Cube_038
+    400018: Cube_039
+    400020: Cube_040
+    400022: Cube_041
+    400024: Cube_042
+    400026: Cube_043
+    400028: Cube_044
+    400030: Cube_045
+    400032: Cube_046
+    400034: Cube_047
+    400036: Cube_048
+    400038: Cube_049
+    400040: Cylinder_000
+    400042: Cylinder_001
+    400044: Cylinder_002
+    400046: Cylinder_006
+    400048: Cylinder_012
+    400050: Icosphere
+    400052: Icosphere_001
+    400054: Icosphere_002
+    400056: Rootbone
+    400058: Sphere
+    400060: SpinBone
+    400062: //RootNode
+    2300000: Cube
+    2300002: Cube_002
+    2300004: Cube_033
+    2300006: Cube_034
+    2300008: Cube_035
+    2300010: Cube_037
+    2300012: Cube_038
+    2300014: Cube_039
+    2300016: Cube_040
+    2300018: Cube_042
+    2300020: Cube_043
+    2300022: Cube_044
+    2300024: Cube_045
+    2300026: Cube_046
+    2300028: Cube_047
+    2300030: Cube_048
+    2300032: Cube_049
+    2300034: Cylinder_000
+    2300036: Cylinder_001
+    2300038: Cylinder_002
+    2300040: Cylinder_006
+    2300042: Cylinder_012
+    2300044: Icosphere
+    2300046: Icosphere_001
+    2300048: Icosphere_002
+    2300050: Sphere
+    3300000: Cube
+    3300002: Cube_002
+    3300004: Cube_033
+    3300006: Cube_034
+    3300008: Cube_035
+    3300010: Cube_037
+    3300012: Cube_038
+    3300014: Cube_039
+    3300016: Cube_040
+    3300018: Cube_042
+    3300020: Cube_043
+    3300022: Cube_044
+    3300024: Cube_045
+    3300026: Cube_046
+    3300028: Cube_047
+    3300030: Cube_048
+    3300032: Cube_049
+    3300034: Cylinder_000
+    3300036: Cylinder_001
+    3300038: Cylinder_002
+    3300040: Cylinder_006
+    3300042: Cylinder_012
+    3300044: Icosphere
+    3300046: Icosphere_001
+    3300048: Icosphere_002
+    3300050: Sphere
+    4300000: Cube_041
+    4300002: Cube_044
+    4300004: Cube_043
+    4300006: Cube_046
+    4300008: Cylinder_002
+    4300010: Cylinder_001
+    4300012: Cylinder_000
+    4300014: Cube_002
+    4300016: Sphere
+    4300018: Cube_049
+    4300020: Cube_048
+    4300022: Cube_047
+    4300024: Icosphere_002
+    4300026: Cube_045
+    4300028: Icosphere_001
+    4300030: Cube_042
+    4300032: Cube_040
+    4300034: Cube_039
+    4300036: Cylinder_012
+    4300038: Cylinder_006
+    4300040: Icosphere
+    4300042: Cube_038
+    4300044: Cube_037
+    4300046: Cube_035
+    4300048: Cube_034
+    4300050: Cube_033
+    4300052: Cube
+    7400000: Default Take
+    7400002: Clutter_Spin
+    9500000: //RootNode
+    13700000: Cube_041
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
