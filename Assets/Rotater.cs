@@ -10,6 +10,6 @@ public class Rotater : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.Rotate(Vector3.forward, 0.2f);
+        transform.Rotate(Vector3.forward, 0.1f);
 	}
 }
