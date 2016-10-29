@@ -172,7 +172,99 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Clutter_Spin
+      takeName: Clutter_Spin
+      firstFrame: -1
+      lastFrame: 400
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Bone_001
+        weight: 1
+      - path: Armature/Rootbone
+        weight: 1
+      - path: Armature/Rootbone/SpinBone
+        weight: 1
+      - path: Cube
+        weight: 1
+      - path: Cube_002
+        weight: 1
+      - path: Cube_033
+        weight: 1
+      - path: Cube_034
+        weight: 1
+      - path: Cube_035
+        weight: 1
+      - path: Cube_037
+        weight: 1
+      - path: Cube_038
+        weight: 1
+      - path: Cube_039
+        weight: 1
+      - path: Cube_040
+        weight: 1
+      - path: Cube_041
+        weight: 1
+      - path: Cube_042
+        weight: 1
+      - path: Cube_043
+        weight: 1
+      - path: Cube_044
+        weight: 1
+      - path: Cube_045
+        weight: 1
+      - path: Cube_046
+        weight: 1
+      - path: Cube_047
+        weight: 1
+      - path: Cube_048
+        weight: 1
+      - path: Cube_049
+        weight: 1
+      - path: Cylinder_000
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      - path: Cylinder_002
+        weight: 1
+      - path: Cylinder_006
+        weight: 1
+      - path: Cylinder_012
+        weight: 1
+      - path: Icosphere
+        weight: 1
+      - path: Icosphere_001
+        weight: 1
+      - path: Icosphere_002
+        weight: 1
+      - path: Sphere
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
