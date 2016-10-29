@@ -28,6 +28,7 @@ public class PowerOnVoltar : MonoBehaviour {
         {
             //turn self off
             StartCoroutine(shrink());
+            this.enabled = false;
         }
 
         if (isOver && powerOnTimer.fillAmount < 1)
@@ -59,12 +60,12 @@ public class PowerOnVoltar : MonoBehaviour {
     private IEnumerator shrink()
     {
         RectTransform timerTransform = powerOnTimer.rectTransform;
-        while(timerTransform.sizeDelta.magnitude > 0)
+        while(timerTransform.sizeDelta.x > 0)
         {
-            timerTransform.sizeDelta -= new Vector2(0.01f, 0.01f);
+            timerTransform.sizeDelta -= new Vector2(0.05f, 0.05f);
             yield return null;
         }
-        FindObjectOfType<GameStateManager>().ChangeState(new ZoltarActive());
+        GameStateManager gsm = FindObjectOfType<GameStateManager>();
+        gsm.ChangeState(gsm.gameObject.AddComponent<ZoltarAwake>());
     }
-
 }

@@ -23,11 +23,11 @@ public class TextGenerator : MonoBehaviour {
     private string path = "grammars.json";
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         grammars = JsonUtility.FromJson<Grammars>(loadJSON());
         tags = new string[]{ "nouns", "adjectives", "verbs", "adverbs", "number" };
-        ChangeText();
-        InvokeRepeating("ChangeText", 1.0f, 2.0f);
+        //ChangeText();
+        //InvokeRepeating("ChangeText", 1.0f, 2.0f);
     }
 
     void ChangeText()

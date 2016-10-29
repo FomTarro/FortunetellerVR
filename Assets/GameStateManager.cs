@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
-public class GameStateManager : MonoBehaviour{
+public class GameStateManager : MonoBehaviour {
 
     [SerializeField]
     public Text textField;
@@ -25,7 +26,7 @@ public class GameStateManager : MonoBehaviour{
     // Use this for initialization
     void Start () {
         textField.text = "";
-        ChangeState(new ZoltarAsleep());
+        ChangeState(gameObject.AddComponent<ZoltarAsleep>());
 	}
 	
 	// Update is called once per frame
@@ -35,14 +36,50 @@ public class GameStateManager : MonoBehaviour{
 
     public void ChangeState(State newState)
     {
+        newState.text = textField;
         newState.TriggerEnterState();
-        currentState.TriggerExitState();
+        if (currentState != null)
+        {
+            currentState.TriggerExitState();
+            Destroy(gameObject.GetComponent(currentState.label));
+        }
         currentState = newState;
-        currentState.text = textField;
+    }
+
+    public void RespondNo()
+    {
+        if (currentState.label == "ZoltarAskFortune")
+        {
+            textField.text = "'No.'";
+            StartCoroutine(Wait(2, "No"));
+            
+        }
+    }
+
+    public void RespondYes()
+    {
+        if(currentState.label == "ZoltarAskFortune")
+        {
+            textField.text = "'Yes.'";
+            StartCoroutine(Wait(2, "Yes"));
+            
+        }
+    }
+
+    private IEnumerator Wait(int seconds, string res)
+    {
+        yield return new WaitForSeconds(seconds);
+        if (res == "No")
+        {
+            textField.text = "Ok.";
+            ChangeState(gameObject.AddComponent<ZoltarAsleep>());
+        }
+        else if (res == "Yes")
+            ChangeState(gameObject.AddComponent<ZoltarCreateFortune>());
     }
 }
 
-public abstract class State
+public abstract class State : MonoBehaviour
 {
     public string label { get; set; }
     public Text text { get; set; }
@@ -57,6 +94,7 @@ public class ZoltarAsleep : State
     public ZoltarAsleep() { label = "ZoltarAsleep"; }
     public override void TriggerEnterState()
     {
+        text.text = "";
         //Zoltar in sleeping animation
     }
     public override void TriggerExitState()
@@ -65,20 +103,70 @@ public class ZoltarAsleep : State
     }
 }
 
-public class ZoltarActive : State
+public class ZoltarAwake : State
 {
-    public ZoltarActive() { label = "ZoltarActive"; }
+
+    public ZoltarAwake() { label = "ZoltarAwake"; }
+
     public override void TriggerEnterState()
     {
         text.text = "WHO WAKES ZOLTAR?";
+        text.StartCoroutine(ZoltarWaitAndChange());
     }
-    public override void TriggerExitState()
-    {
-        //have zoltar go back to sleep
 
-    }
-    public override void ChangeContext(string new_context)
+    private IEnumerator ZoltarWaitAndChange()
     {
-        
+        yield return new WaitForSeconds(2);
+        FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent<ZoltarAskFortune>());
     }
 }
+
+public class ZoltarAskFortune : State
+{
+    public ZoltarAskFortune() { label = "ZoltarAskFortune"; }
+    public int askCount = -1;
+    public override void TriggerEnterState()
+    {
+        askCount++;
+        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+        foreach (EventCallback cb in list)
+            cb.enabled = true;
+        if (askCount > 0)
+            text.text = "Would you like another fortune?";
+        else
+            text.text = "Would you like a fortune?";
+    }
+
+    public override void TriggerExitState()
+    {
+        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+        foreach (EventCallback cb in list)
+            cb.enabled = false;
+    }
+}
+
+public class ZoltarCreateFortune : State
+{
+    public ZoltarCreateFortune() { label = "ZoltarCreateFortune"; }
+    public override void TriggerEnterState()
+    {
+        text.text = FindObjectOfType<TextGenerator>().GenerateRandom();
+        Debug.Log(text.text);
+        StartCoroutine(WaitAndChange(5, "..."));
+    }
+
+    private IEnumerator WaitAndChange(int seconds, string change_to)
+    {
+        yield return new WaitForSeconds(seconds);
+        if(change_to == "...")
+        {
+            text.text = "...";
+            StartCoroutine(WaitAndChange(2, ""));
+        }
+        else
+        {
+            FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent <ZoltarAskFortune>());
+        }
+    }
+}
+
