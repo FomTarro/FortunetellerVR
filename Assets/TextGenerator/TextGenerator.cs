@@ -62,7 +62,7 @@ public class TextGenerator : MonoBehaviour {
                         list = grammars.adverbs;
                         break;
                     case "number":
-                        sentence[idx] = (Math.Floor((double)UnityEngine.Random.Range(0, 1000))).ToString();
+                        sentence[idx] = (Math.Floor((double)UnityEngine.Random.Range(0, 22))).ToString();
                         continue;
                 }
                 sentence[idx] = list[(int) Math.Floor(UnityEngine.Random.value * list.Length)];
