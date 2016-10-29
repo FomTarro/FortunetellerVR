@@ -37,6 +37,8 @@ ModelImporter:
     100058: Sphere
     100060: SpinBone
     100062: //RootNode
+    100064: Booth
+    100066: Zoltar
     400000: Armature
     400002: Bone_001
     400004: Cube
@@ -69,6 +71,8 @@ ModelImporter:
     400058: Sphere
     400060: SpinBone
     400062: //RootNode
+    400064: Booth
+    400066: Zoltar
     2300000: Cube
     2300002: Cube_002
     2300004: Cube_033
@@ -95,6 +99,8 @@ ModelImporter:
     2300046: Icosphere_001
     2300048: Icosphere_002
     2300050: Sphere
+    2300052: Booth
+    2300054: Zoltar
     3300000: Cube
     3300002: Cube_002
     3300004: Cube_033
@@ -121,6 +127,8 @@ ModelImporter:
     3300046: Icosphere_001
     3300048: Icosphere_002
     3300050: Sphere
+    3300052: Booth
+    3300054: Zoltar
     4300000: Cube_041
     4300002: Cube_044
     4300004: Cube_043
@@ -148,6 +156,8 @@ ModelImporter:
     4300048: Cube_034
     4300050: Cube_033
     4300052: Cube
+    4300054: Zoltar
+    4300056: Booth
     7400000: Default Take
     7400002: Clutter_Spin
     9500000: //RootNode

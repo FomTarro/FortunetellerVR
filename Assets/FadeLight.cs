@@ -21,12 +21,12 @@ public class FadeLight : MonoBehaviour {
         {
             if (light.intensity > maxIntensity)
                 fadeIn = false;
-            light.intensity += 0.005f;
+            light.intensity += 0.035f;
         } else
         {
             if (light.intensity <= 0)
                 fadeIn = true;
-            light.intensity -= 0.005f;
+            light.intensity -= 0.035f;
         }
 	}
 }
