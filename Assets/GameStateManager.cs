@@ -7,6 +7,9 @@ using System.Collections.Generic;
 public class GameStateManager : MonoBehaviour {
 
     [SerializeField]
+    Animator _zoltarAnimator;
+
+    [SerializeField]
     public Text textField;
 
     private static GameStateManager _instance;
@@ -37,6 +40,7 @@ public class GameStateManager : MonoBehaviour {
     public void ChangeState(State newState)
     {
         newState.text = textField;
+        newState.anim = _zoltarAnimator;
         newState.TriggerEnterState();
         if (currentState != null)
         {
@@ -83,10 +87,12 @@ public abstract class State : MonoBehaviour
 {
     public string label { get; set; }
     public Text text { get; set; }
+    public Animator anim { get; set; }
     public virtual void TriggerEnterState() { }
     public virtual void TriggerExitState() { }
     public virtual void UpdateState() { }
     public virtual void ChangeContext(string new_context) { }
+    public string[] animList = new string[]{"Spin", "HeadShake"};
 }
 
 public class ZoltarAsleep : State
@@ -95,9 +101,18 @@ public class ZoltarAsleep : State
     public override void TriggerEnterState()
     {
         text.text = "";
-        FindObjectOfType<PowerOnVoltar>().ResetVoltar();
+        StartCoroutine(BackToSleep());
         //Zoltar in sleeping animation
     }
+
+    private IEnumerator BackToSleep()
+    {
+        FindObjectOfType<CabinetLight>().LightDown();
+        yield return new WaitForSeconds(1f);
+        anim.SetInteger("State", 0);
+        FindObjectOfType<PowerOnVoltar>().ResetVoltar();
+    }
+
     public override void TriggerExitState()
     {
         //
@@ -111,12 +126,15 @@ public class ZoltarAwake : State
 
     public override void TriggerEnterState()
     {
-        text.text = "WHO WAKES ZOLTAR?";
+        anim.SetInteger("State", 1);
         text.StartCoroutine(ZoltarWaitAndChange());
     }
 
     private IEnumerator ZoltarWaitAndChange()
     {
+        FindObjectOfType<CabinetLight>().LightUp();
+        yield return new WaitForSeconds(3);
+        text.text = "WHO WAKES GALDOR?";
         yield return new WaitForSeconds(2);
         FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent<ZoltarAskFortune>());
     }
@@ -151,6 +169,7 @@ public class ZoltarCreateFortune : State
     public ZoltarCreateFortune() { label = "ZoltarCreateFortune"; }
     public override void TriggerEnterState()
     {
+        anim.SetTrigger("Spin");
         text.text = FindObjectOfType<TextGenerator>().GenerateRandom();
         Debug.Log(text.text);
         StartCoroutine(WaitAndChange(5, "..."));
