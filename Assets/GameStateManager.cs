@@ -95,6 +95,7 @@ public class ZoltarAsleep : State
     public override void TriggerEnterState()
     {
         text.text = "";
+        FindObjectOfType<PowerOnVoltar>().ResetVoltar();
         //Zoltar in sleeping animation
     }
     public override void TriggerExitState()

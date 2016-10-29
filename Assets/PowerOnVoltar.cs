@@ -14,12 +14,14 @@ public class PowerOnVoltar : MonoBehaviour {
     bool isOver = false;
     bool turnOn = false;
 
+    private Vector2 originalSize;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         interactive = GetComponent<VRInteractiveItem>();
         interactive.OnOver += StartPowerOn;
         interactive.OnOut += EndPowerOn;
+        originalSize = powerOnTimer.rectTransform.sizeDelta;
 	}
 	
     void Update()
@@ -33,7 +35,7 @@ public class PowerOnVoltar : MonoBehaviour {
 
         if (isOver && powerOnTimer.fillAmount < 1)
         {
-            powerOnTimer.fillAmount += 0.01f;
+            powerOnTimer.fillAmount += 0.02f;
         }
         else if (isOver && powerOnTimer.fillAmount >= 1)
         {
@@ -43,7 +45,7 @@ public class PowerOnVoltar : MonoBehaviour {
         }
         else if(!isOver && !turnOn && powerOnTimer.fillAmount > 0)
         {
-            powerOnTimer.fillAmount -= 0.01f;
+            powerOnTimer.fillAmount -= 0.02f;
         }
     }
 
@@ -55,6 +57,16 @@ public class PowerOnVoltar : MonoBehaviour {
     void EndPowerOn()
     {
         isOver = false;
+    }
+
+    public void ResetVoltar()
+    {
+        powerOnTimer.fillAmount = 0;
+        powerOnTimer.color = Color.white;
+        powerOnTimer.rectTransform.sizeDelta = originalSize;
+        isOver = false;
+        turnOn = false;
+        this.enabled = true;
     }
 
     private IEnumerator shrink()
