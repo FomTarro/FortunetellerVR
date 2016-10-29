@@ -1,0 +1,48 @@
+{
+    "nouns": [
+        "bat", "skull",
+        "skeleton", "old man",
+        "pumpkin", "day", "night",
+        "evening", "morning",
+      "star",
+      "egg",
+      "bed",
+      "grave",
+      "tree",
+      "candy",
+      "treat"
+    ],
+    "adjectives": [
+        "horrible", "spooky",
+        "terrible", "wonderful",
+        "beautiful", "young", "playful"
+    ],
+    "verbs": [
+        "bite", "howl", "chew",
+        "sleep", "chomp", "twinkle",
+        "chase", "eat", "peep", "dance",
+      "punch",
+      "swing",
+      "fly",
+      "trick",
+      "blaze"
+    ],
+    "adverbs": [
+        "badly", "carefully", "eagerly",
+        "savagely", "recklessly", "wishfully",
+        "peacefully", "playfully", "blazingly"
+    ],
+    "fortunes": [
+        "Look ahead, your future has many #nouns#.s.",
+        "Beware a #adjectives# #nouns#....",
+        "There will be many #nouns#.s #verbs#.ing #adverbs#..",
+        "Try not to feel #adjectives#..",
+        "Try not to #verbs#..",
+        "Run if you see #nouns#..",
+        "Your lucky item today is #nouns#..",
+        "There will be #number# #nouns#.s in your #adjectives# life.",
+        "#number# #nouns#.s will come #adverbs# #verbs#.ing at you.",
+        "I'm sorry.",
+        "...*BEEP*..."
+    ]
+}
