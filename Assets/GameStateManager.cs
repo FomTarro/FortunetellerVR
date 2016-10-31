@@ -10,7 +10,12 @@ public class GameStateManager : MonoBehaviour {
     Animator _zoltarAnimator;
 
     [SerializeField]
-    public Text textField;
+    int[] _animStateList;
+
+    public static int[] AnimList;
+
+    [SerializeField]
+    public SpeechText textField;
 
     private static GameStateManager _instance;
 
@@ -28,7 +33,8 @@ public class GameStateManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        textField.text = "";
+        AnimList = _animStateList;
+        textField.StartCoroutine(textField.SayText(""));
         ChangeState(gameObject.AddComponent<ZoltarAsleep>());
 	}
 	
@@ -54,7 +60,10 @@ public class GameStateManager : MonoBehaviour {
     {
         if (currentState.label == "ZoltarAskFortune")
         {
-            textField.text = "'No.'";
+            List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+            foreach (EventCallback cb in list)
+                cb.enabled = false;
+            textField.SetText("'No.'");
             StartCoroutine(Wait(2, "No"));
             
         }
@@ -64,7 +73,10 @@ public class GameStateManager : MonoBehaviour {
     {
         if(currentState.label == "ZoltarAskFortune")
         {
-            textField.text = "'Yes.'";
+            List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+            foreach (EventCallback cb in list)
+                cb.enabled = false;
+            textField.SetText("'Yes.'");
             StartCoroutine(Wait(2, "Yes"));
             
         }
@@ -75,18 +87,20 @@ public class GameStateManager : MonoBehaviour {
         yield return new WaitForSeconds(seconds);
         if (res == "No")
         {
-            textField.text = "Ok.";
+            yield return textField.StartCoroutine(textField.SayText("Very well then..."));
             ChangeState(gameObject.AddComponent<ZoltarAsleep>());
         }
         else if (res == "Yes")
+        {
             ChangeState(gameObject.AddComponent<ZoltarCreateFortune>());
+        }
     }
 }
 
 public abstract class State : MonoBehaviour
 {
     public string label { get; set; }
-    public Text text { get; set; }
+    public SpeechText text { get; set; }
     public Animator anim { get; set; }
     public virtual void TriggerEnterState() { }
     public virtual void TriggerExitState() { }
@@ -100,7 +114,7 @@ public class ZoltarAsleep : State
     public ZoltarAsleep() { label = "ZoltarAsleep"; }
     public override void TriggerEnterState()
     {
-        text.text = "";
+        text.StartCoroutine(text.SayText(""));
         StartCoroutine(BackToSleep());
         //Zoltar in sleeping animation
     }
@@ -126,6 +140,7 @@ public class ZoltarAwake : State
 
     public override void TriggerEnterState()
     {
+        ZoltarAskFortune.askCount = -1;
         anim.SetInteger("State", 1);
         text.StartCoroutine(ZoltarWaitAndChange());
     }
@@ -133,9 +148,10 @@ public class ZoltarAwake : State
     private IEnumerator ZoltarWaitAndChange()
     {
         FindObjectOfType<CabinetLight>().LightUp();
+        //yield return new WaitForSeconds(3);
+        //text.text = "You have awakened Galdor the Great!";
         yield return new WaitForSeconds(3);
-        text.text = "WHO WAKES GALDOR?";
-        yield return new WaitForSeconds(2);
+        yield return text.StartCoroutine(text.SayText("You have awakened GALDOR the Great!"));
         FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent<ZoltarAskFortune>());
     }
 }
@@ -143,17 +159,25 @@ public class ZoltarAwake : State
 public class ZoltarAskFortune : State
 {
     public ZoltarAskFortune() { label = "ZoltarAskFortune"; }
-    public int askCount = -1;
+    public static int askCount = -1;
     public override void TriggerEnterState()
     {
         askCount++;
         List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
         foreach (EventCallback cb in list)
             cb.enabled = true;
+        StartCoroutine(AskPlayer());
+    }
+
+
+    private IEnumerator AskPlayer()
+    {
         if (askCount > 0)
-            text.text = "Would you like another fortune?";
+            yield return text.StartCoroutine(text.SayText("You want yet another fortune, yes?"));
         else
-            text.text = "Would you like a fortune?";
+            yield return text.StartCoroutine(text.SayText("You are here for a fortune, yes?\nJust nod if you are."));
+
+        yield return null;
     }
 
     public override void TriggerExitState()
@@ -169,23 +193,42 @@ public class ZoltarCreateFortune : State
     public ZoltarCreateFortune() { label = "ZoltarCreateFortune"; }
     public override void TriggerEnterState()
     {
-        anim.SetTrigger("Spin");
-        text.text = FindObjectOfType<TextGenerator>().GenerateRandom();
-        Debug.Log(text.text);
+        //anim.SetTrigger("Spin");
+        //Debug.Log(text.text);
+        StartCoroutine(MakeFortune());
+    }
+
+    private IEnumerator MakeFortune()
+    {
+        anim.SetInteger("State", GameStateManager.AnimList[UnityEngine.Random.Range(0, GameStateManager.AnimList.Length)]);
+        yield return text.StartCoroutine(text.SayText(FindObjectOfType<TextGenerator>().GenerateRandom()));
+
+        /*
+        do
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Booth_Default") || !anim.IsInTransition(0))
+                anim.SetTrigger(GameStateManager.AnimList[UnityEngine.Random.Range(0, GameStateManager.AnimList.Length)]);
+
+            yield return null;
+        } while (!text.FinishedTalking);
+        */
+
+        yield return null;
         StartCoroutine(WaitAndChange(5, "..."));
     }
 
     private IEnumerator WaitAndChange(int seconds, string change_to)
     {
+        anim.SetInteger("State", 1);
         yield return new WaitForSeconds(seconds);
-        if(change_to == "...")
+        if (change_to == "...")
         {
-            text.text = "...";
+            text.StartCoroutine(text.SayText("..."));
             StartCoroutine(WaitAndChange(2, ""));
         }
         else
         {
-            FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent <ZoltarAskFortune>());
+            FindObjectOfType<GameStateManager>().ChangeState(gameObject.AddComponent<ZoltarAskFortune>());
         }
     }
 }
