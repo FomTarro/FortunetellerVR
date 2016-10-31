@@ -38,7 +38,7 @@ public class TextGenerator : MonoBehaviour {
     public string GenerateRandom()
     {
         //Select a random fortune
-        string fortune = grammars.fortunes[(int)Math.Floor(UnityEngine.Random.value * grammars.fortunes.Length)];
+        string fortune = grammars.fortunes[UnityEngine.Random.Range(0, grammars.fortunes.Length)];
         string[] sentence = fortune.Split(new char[]{ '#' });
         //Parse out tags
         int idx = 0;
@@ -62,10 +62,10 @@ public class TextGenerator : MonoBehaviour {
                         list = grammars.adverbs;
                         break;
                     case "number":
-                        sentence[idx] = (Math.Floor((double)UnityEngine.Random.Range(0, 22))).ToString();
+                        sentence[idx] = (UnityEngine.Random.Range(2, 22)).ToString();
                         continue;
                 }
-                sentence[idx] = list[(int) Math.Floor(UnityEngine.Random.value * list.Length)];
+                sentence[idx] = list[UnityEngine.Random.Range(0, list.Length)];
                 if ((idx + 1) < sentence.Length && sentence[idx + 1][0].Equals('.'))
                 {
                     if (sentence[idx + 1].IndexOf("ing") != -1 && sentence[idx][sentence[idx].Length - 1].Equals('e'))
@@ -79,6 +79,8 @@ public class TextGenerator : MonoBehaviour {
             }
             idx++;
         }
+        Debug.Log(sentence[0]);
+        sentence[0] = sentence[0].CapitalizeFirstLetter();
         return String.Join("", sentence);
     }
 

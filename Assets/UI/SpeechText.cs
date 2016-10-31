@@ -55,7 +55,7 @@ public class SpeechText : MonoBehaviour{
             {
                 _voicePlayer.clip = _voiceSamples[Random.Range(0, _voiceSamples.Length)];
                 _voicePlayer.Play();
-                yield return new WaitForSeconds(0.095f);
+                yield return new WaitForSeconds(0.09f);
             }
         }
         yield return new WaitForSeconds(0.75f);

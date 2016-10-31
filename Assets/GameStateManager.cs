@@ -163,9 +163,6 @@ public class ZoltarAskFortune : State
     public override void TriggerEnterState()
     {
         askCount++;
-        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
-        foreach (EventCallback cb in list)
-            cb.enabled = true;
         StartCoroutine(AskPlayer());
     }
 
@@ -173,9 +170,13 @@ public class ZoltarAskFortune : State
     private IEnumerator AskPlayer()
     {
         if (askCount > 0)
-            yield return text.StartCoroutine(text.SayText("You want yet another fortune, yes?"));
+            yield return text.StartCoroutine(text.SayText("Would you like yet another fortune?"));
         else
-            yield return text.StartCoroutine(text.SayText("You are here for a fortune, yes?\nJust nod if you are."));
+            yield return text.StartCoroutine(text.SayText("You are here seeking a mystical fortune, yes?\nJust nod your head to proceed."));
+
+        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+        foreach (EventCallback cb in list)
+            cb.enabled = true;
 
         yield return null;
     }
