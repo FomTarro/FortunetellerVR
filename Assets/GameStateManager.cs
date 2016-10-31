@@ -170,7 +170,7 @@ public class ZoltarAskFortune : State
     private IEnumerator AskPlayer()
     {
         if (askCount > 0)
-            yield return text.StartCoroutine(text.SayText("Would you like yet another fortune?"));
+            yield return text.StartCoroutine(text.SayText("Would you like another fortune?"));
         else
             yield return text.StartCoroutine(text.SayText("You are here seeking a mystical fortune, yes?\nJust nod your head to proceed."));
 
