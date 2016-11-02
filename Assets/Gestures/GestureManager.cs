@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public enum GestureType
 {
@@ -10,183 +9,178 @@ public enum GestureType
 
 public class GestureManager : MonoBehaviour
 {
-    public Text DebugText;
+    [SerializeField]
+    private Camera _cameraToMeasure;
+    /// <summary>
+    /// The head tracking camera from which to obtain gesture data.
+    /// </summary>
+    public Camera CameraToMeasure
+    {
+        set { _cameraToMeasure = value; }
+    }
 
-    private float _velX = 0.0f;
-    private float _lastXVal = 0.0f;
-
-    private float _velY = 0.0f;
-    private float _lastYVal = 0.0f;
-
-    private bool negDirectionShake = false;
-    private bool negDirectionNod = false;
-
-    private float _timeSinceLastX = 0.0f;
-    private float _timeSinceLastY = 0.0f;
-
-    private int _shakes = 0;
-    private int _nods = 0;
-
+    #region Threshold Parameters
 
     [SerializeField]
     [Tooltip("The minimum difference in quaternion readings to trigger a gesture check.")]
-    private float _deltaThreshold = 0.05f;
+    private float _deltaThreshold = 0.015f;
+    /// <summary>
+    /// The minimum difference in quaternion readings to trigger a gesture check.
+    /// </summary>
+    public float DeltaThreshold
+    {
+        get { return _deltaThreshold; }
+        set { _deltaThreshold = value; }
+    }
+
     [SerializeField]
-    [Tooltip("The minimum amount of time that each gesture check must be from the previous to be read as a gesture.")]
+    [Tooltip("The minimum amount of time that each gesture motion must be from the previous to be read as a gesture.")]
     private float _timeThreshold = 1.0f;
+    /// <summary>
+    /// The minimum amount of time that each gesture motion must be from the previous to be read as a gesture.
+    /// </summary>
+    public float TimeThreshold
+    {
+        get { return _timeThreshold; }
+        set { _timeThreshold = value; }
+    }
+
     [SerializeField]
     [Tooltip("The minimum amout of passing gesture checks that must occur to create a valid gesture.")]
     private int _gestureAmountThreshold = 3;
-
-    // Use this for initialization
-    void Start()
+    /// <summary>
+    /// The minimum amout of passing gesture checks that must occur to create a valid gesture.
+    /// </summary>
+    public int GestureAmountThreshold
     {
+        get { return _gestureAmountThreshold; }
+        set { _gestureAmountThreshold = value; }
+    }
+
+    #endregion
+
+    private static GestureManager _instance;
+    /// <summary>
+    /// The instance of the GestureManager in the game.
+    /// </summary>
+    public static GestureManager Instance
+    {
+        get { return _instance; }
+    }
+
+    private List<GestureListener> _listeners = new List<GestureListener>();
+    /// <summary>
+    /// The list of all currently existing Gesture Listeners. 
+    /// <para>
+    /// Listeners are automatically added when created, and are automatically removed when destroyed.
+    /// </para>
+    /// </summary>
+    public List<GestureListener> ListenerRegistry
+    {
+        get { return _listeners; }
+    }
+
+    private Gesture _yes = new Gesture(GestureType.Nod), _no = new Gesture(GestureType.Shake);
+
+    private class Gesture
+    {
+        float _lastVelocity = 0.0f;
+        bool _negDirection = false;
+        int _headDirectionChanges = 0;
+        float _timeSinceLast = 0.0f;
+        float _lastMeasurement = 0.0f;
+        GestureType _gestureType;
+        public GestureType GestureType
+        {
+            get { return _gestureType; }
+        }
+
+        public Gesture(GestureType gestureType)
+        {
+            _gestureType = gestureType;
+        }
+
+        /// <summary>
+        /// Checks to see if this gestur has been completed.
+        /// </summary>
+        /// <param name="newMeasurement">The new measurement data to compare against the previous measurement data.</param>
+        /// <param name="deltaThreshold">The threshold for difference in measurement. Any difference less than this is considered noise.</param>
+        /// <param name="timeThreshold">The minimum amount of time that each gesture motion must be from the previous to be read as a gesture.</param>
+        /// <param name="gestureAmountThreshold">The minimum amout of passing gesture checks that must occur to create a valid gesture.</param>
+        /// <returns></returns>
+        public bool CheckGesture(float newMeasurement, float deltaThreshold, float timeThreshold, int gestureAmountThreshold)
+        {
+            bool completedGesture = false;
+
+            float newVelocity = (newMeasurement - _lastMeasurement) / Time.fixedDeltaTime;
+            if (Mathf.Abs(newMeasurement - _lastMeasurement) > deltaThreshold)
+            {
+                if ((_lastVelocity < 0 && newVelocity < 0 && !_negDirection) || (_lastVelocity > 0 && newVelocity > 0 && _negDirection))
+                {
+                    if (_timeSinceLast < timeThreshold)
+                    {
+                        _headDirectionChanges++;
+                        if (_headDirectionChanges >= gestureAmountThreshold)
+                        {
+                            _headDirectionChanges = 0;
+                            completedGesture = true;
+                        }
+                    }
+                    else
+                    {
+                        _headDirectionChanges = 0;
+                        completedGesture = false;
+                        
+                    }
+                    _timeSinceLast = 0.0f;
+                    _negDirection = (_lastVelocity < 0 && newVelocity < 0);
+                }
+            }
+
+            _lastMeasurement = newMeasurement;
+            _lastVelocity = newVelocity;
+            _timeSinceLast += Time.deltaTime;
+
+            return completedGesture;
+        }
 
     }
 
-    // Update is called once per frame
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+        if (_instance == null)
+            _instance = this;
+        else
+            Destroy(this);
+    }
+
     void FixedUpdate()
     {
+        if(_yes.CheckGesture(_cameraToMeasure.transform.rotation.x, _deltaThreshold, _timeThreshold, _gestureAmountThreshold))
+            SendGestureEvent(_yes.GestureType);
 
-        // Nod
-        float newVelX = (transform.rotation.x - _lastXVal) / Time.fixedDeltaTime;
-        if (Mathf.Abs(transform.rotation.x - _lastXVal) > _deltaThreshold)
-        {
-            // Negative Velocity
-            if (_velX < 0 && newVelX < 0)
-            {
-                if (!negDirectionNod) // If the direction of velocity has changed
-                {
-                    if (_timeSinceLastX < _timeThreshold)
-                    {
-                        IncrementNodGesture();
-                    }
-                    else
-                    {
-                        _nods = 0;
-                    }
-                }
-                _timeSinceLastX = 0.0f;
-                negDirectionNod = true;
-            }
-
-            // Positive Velocity
-            else if (_velX > 0 && newVelX > 0)
-            {
-                if (negDirectionNod) // If the direction of velocity has changed
-                {
-                    if (_timeSinceLastX < _timeThreshold)
-                    {
-                        IncrementNodGesture();
-                    }
-                    else
-                    {
-                        _nods = 0;
-                    }
-                }
-                _timeSinceLastX = 0.0f;
-                negDirectionNod = false;
-            }
-        }
-
-        // Shake
-
-        float newVelY = (transform.rotation.y - _lastYVal) / Time.fixedDeltaTime;
-        if (Mathf.Abs(transform.rotation.y - _lastYVal) > _deltaThreshold)
-        {
-            // Negative Velocity
-            if (_velY < 0 && newVelY < 0)
-            {
-                if (!negDirectionShake) // If the direction of velocity has changed
-                {
-                    if (_timeSinceLastY < _timeThreshold)
-                    {
-                        IncrementShakeGesture();
-                    }
-                    else
-                    {
-                        _shakes = 0;
-                    }
-                }
-                _timeSinceLastY = 0.0f;
-                negDirectionShake = true;
-            }
-
-            // Positive Velocity
-            else if (_velY > 0 && newVelY > 0)
-            {
-                if (negDirectionShake) // If the direction of velocity has changed 
-                {
-                    if (_timeSinceLastY < _timeThreshold)
-                    {
-                        IncrementShakeGesture();
-                    }
-                    else
-                    {
-                        _shakes = 0;
-                    }
-                }
-                _timeSinceLastY = 0.0f;
-                negDirectionShake = false;
-            }
-        }
-
-
-        _lastXVal = transform.rotation.x;
-        _lastYVal = transform.rotation.y;
-
-        _velY = newVelY;
-        _velX = newVelX;
-
-        _timeSinceLastX += Time.fixedDeltaTime;
-        _timeSinceLastY += Time.fixedDeltaTime;
-
+        if (_no.CheckGesture(_cameraToMeasure.transform.rotation.y, _deltaThreshold, _timeThreshold, _gestureAmountThreshold))
+            SendGestureEvent(_no.GestureType);
     }
-
 
     /// <summary>
-    /// Increments the Shake gesture counter, and, if it exceeds the threshold, sends out a Shake Gesture Event to all listeners.
+    /// Sends a Gesture Event of the given type out to all listener objects.
     /// </summary>
-    void IncrementShakeGesture()
+    /// <param name="gestureType">The gesture type to send out.</param>
+    void SendGestureEvent(GestureType gestureType)
     {
-        _shakes++;
-        if (_shakes >= _gestureAmountThreshold)
+        foreach (GestureListener gl in _listeners)
         {
-            _shakes = 0;
-            foreach(GestureListener gl in FindObjectsOfType<GestureListener>())
+            foreach (GestureEventCallback ec in gl.EventCallbacks)
             {
-                foreach(EventCallback ec in gl.EventCallbacks)
+                if (ec.ListeningFor == gestureType && ec.IsEnabled)
                 {
-                    if(ec.gestureListeningFor == GestureType.Shake && ec.enabled)
-                    {
-                        ec.onEvent.Invoke();
-                    }
+                    ec.Event.Invoke();
                 }
             }
         }
     }
 
-
-    /// <summary>
-    /// Increments the Nod gesture counter, and, if it exceeds the threshold, sends out a Nod Gesture Event to all listeners.
-    /// </summary>
-    void IncrementNodGesture()
-    {
-        _nods++;
-        if (_nods >= _gestureAmountThreshold)
-        {
-            _nods = 0;
-            foreach (GestureListener gl in FindObjectsOfType<GestureListener>())
-            {
-                foreach (EventCallback ec in gl.EventCallbacks)
-                {
-                    if (ec.gestureListeningFor == GestureType.Nod && ec.enabled)
-                    {
-                        ec.onEvent.Invoke();
-                    }
-                }
-            }
-        }
-    }
 }
 

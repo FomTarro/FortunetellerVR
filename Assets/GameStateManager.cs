@@ -60,9 +60,9 @@ public class GameStateManager : MonoBehaviour {
     {
         if (currentState.label == "ZoltarAskFortune")
         {
-            List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
-            foreach (EventCallback cb in list)
-                cb.enabled = false;
+            List<GestureEventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+            foreach (GestureEventCallback cb in list)
+                cb.IsEnabled = false;
             textField.SetText("'No.'");
             StartCoroutine(Wait(2, "No"));
             
@@ -73,9 +73,9 @@ public class GameStateManager : MonoBehaviour {
     {
         if(currentState.label == "ZoltarAskFortune")
         {
-            List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
-            foreach (EventCallback cb in list)
-                cb.enabled = false;
+            List<GestureEventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+            foreach (GestureEventCallback cb in list)
+                cb.IsEnabled = false;
             textField.SetText("'Yes.'");
             StartCoroutine(Wait(2, "Yes"));
             
@@ -174,18 +174,18 @@ public class ZoltarAskFortune : State
         else
             yield return text.StartCoroutine(text.SayText("You are here seeking a mystical fortune, yes?\nJust nod your head to proceed."));
 
-        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
-        foreach (EventCallback cb in list)
-            cb.enabled = true;
+        List<GestureEventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+        foreach (GestureEventCallback cb in list)
+            cb.IsEnabled = true;
 
         yield return null;
     }
 
     public override void TriggerExitState()
     {
-        List<EventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
-        foreach (EventCallback cb in list)
-            cb.enabled = false;
+        List<GestureEventCallback> list = FindObjectOfType<GestureListener>().EventCallbacks;
+        foreach (GestureEventCallback cb in list)
+            cb.IsEnabled = false;
     }
 }
 
